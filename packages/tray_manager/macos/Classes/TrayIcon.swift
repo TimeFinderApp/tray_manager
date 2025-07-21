@@ -61,10 +61,7 @@ public class TrayIcon: NSView {
             let attributedString = NSMutableAttributedString()
             
             // Add colored prefix if provided
-            if let prefix = prefix, let prefixColor = prefixColor {
-                print("DEBUG: Trying to parse color: \(prefixColor)")
-                let color = NSColor(hex: prefixColor) ?? NSColor.systemRed // Use red as obvious fallback
-                print("DEBUG: Parsed color: \(color)")
+            if let prefix = prefix, let prefixColor = prefixColor, let color = NSColor(hex: prefixColor) {
                 let prefixAttributes: [NSAttributedString.Key: Any] = [
                     .foregroundColor: color
                 ]
@@ -120,35 +117,26 @@ extension NSColor {
         let start = hex.hasPrefix("#") ? hex.index(hex.startIndex, offsetBy: 1) : hex.startIndex
         let hexColor = String(hex[start...])
         
-        print("DEBUG NSColor: Processing hex string '\(hexColor)' with length \(hexColor.count)")
-        
         let scanner = Scanner(string: hexColor)
         var hexNumber: UInt64 = 0
         
         if scanner.scanHexInt64(&hexNumber) {
-            print("DEBUG NSColor: Successfully scanned hex number: \(String(hexNumber, radix: 16))")
-            
             if hexColor.count == 6 {
                 // Standard 6-character hex: #RRGGBB
                 r = CGFloat((hexNumber & 0xff0000) >> 16) / 255
                 g = CGFloat((hexNumber & 0x00ff00) >> 8) / 255
                 b = CGFloat(hexNumber & 0x0000ff) / 255
-                print("DEBUG NSColor: 6-char format - R:\(r) G:\(g) B:\(b)")
             } else if hexColor.count == 8 {
                 // 8-character hex with alpha: #AARRGGBB, skip alpha and extract RGB
                 r = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
                 g = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
                 b = CGFloat(hexNumber & 0x000000ff) / 255
-                print("DEBUG NSColor: 8-char format - R:\(r) G:\(g) B:\(b)")
             } else {
-                print("DEBUG NSColor: Unsupported hex length: \(hexColor.count)")
                 return nil
             }
             
             self.init(red: r, green: g, blue: b, alpha: 1.0)
             return
-        } else {
-            print("DEBUG NSColor: Failed to scan hex string '\(hexColor)'")
         }
         
         return nil
