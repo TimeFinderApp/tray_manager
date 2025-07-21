@@ -57,16 +57,19 @@ class TrayManager {
           int id = call.arguments['id'];
           MenuItem? menuItem = _menu?.getMenuItemById(id);
           if (menuItem != null) {
-            bool? oldChecked = menuItem.checked;
+            // bool? oldChecked = menuItem.checked;
             if (menuItem.onClick != null) {
               menuItem.onClick?.call(menuItem);
             }
             listener.onTrayMenuItemClick(menuItem);
 
-            bool? newChecked = menuItem.checked;
-            if (oldChecked != newChecked) {
-              await setContextMenu(_menu!);
-            }
+            // Disabled automatic menu rebuild on checkbox change
+            // This was causing menus to flicker/reopen
+            // Apps should manage their own menu state
+            // bool? newChecked = menuItem.checked;
+            // if (oldChecked != newChecked) {
+            //   await setContextMenu(_menu!);
+            // }
           }
           break;
       }
