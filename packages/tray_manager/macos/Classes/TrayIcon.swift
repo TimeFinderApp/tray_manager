@@ -62,7 +62,9 @@ public class TrayIcon: NSView {
             
             // Add colored prefix if provided
             if let prefix = prefix, let prefixColor = prefixColor {
-                let color = NSColor(hex: prefixColor) ?? NSColor.labelColor
+                print("DEBUG: Trying to parse color: \(prefixColor)")
+                let color = NSColor(hex: prefixColor) ?? NSColor.systemRed // Use red as obvious fallback
+                print("DEBUG: Parsed color: \(color)")
                 let prefixAttributes: [NSAttributedString.Key: Any] = [
                     .foregroundColor: color
                 ]
