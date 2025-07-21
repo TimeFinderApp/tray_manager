@@ -57,8 +57,8 @@ public class TrayManagerPlugin: NSObject, FlutterPlugin, NSMenuDelegate {
         case "setTitle":
             setTitle(call, result: result)
             break
-        case "setTitleWithColor":
-            setTitleWithColor(call, result: result)
+        case "setAttributedTitle":
+            setAttributedTitle(call, result: result)
             break
         case "setContextMenu":
             setContextMenu(call, result: result)
@@ -193,12 +193,13 @@ public class TrayManagerPlugin: NSObject, FlutterPlugin, NSMenuDelegate {
         result(true)
     }
     
-    public func setTitleWithColor(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    public func setAttributedTitle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let args:[String: Any] = call.arguments as! [String: Any]
-        let title: String =  args["title"] as! String;
-        let color: String =  args["color"] as! String;
+        let title: String = args["title"] as! String;
+        let prefix: String? = args["prefix"] as? String;
+        let prefixColor: String? = args["prefixColor"] as? String;
         
-        trayIcon?.setTitleWithColor(title, color)
+        trayIcon?.setAttributedTitle(title, prefix: prefix, prefixColor: prefixColor)
         
         result(true)
     }

@@ -56,16 +56,32 @@ public class TrayIcon: NSView {
         self.frame = statusItem!.button!.frame
     }
     
-    public func setTitleWithColor(_ title: String, _ colorHex: String) {
+    public func setAttributedTitle(_ title: String, prefix: String?, prefixColor: String?) {
         if let button = statusItem?.button {
-            let color = NSColor(hex: colorHex) ?? NSColor.labelColor
-            let attributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: color
+            let attributedString = NSMutableAttributedString()
+            
+            // Add colored prefix if provided
+            if let prefix = prefix, let prefixColor = prefixColor {
+                let color = NSColor(hex: prefixColor) ?? NSColor.labelColor
+                let prefixAttributes: [NSAttributedString.Key: Any] = [
+                    .foregroundColor: color
+                ]
+                attributedString.append(NSAttributedString(
+                    string: prefix + " ",
+                    attributes: prefixAttributes
+                ))
+            }
+            
+            // Add main title with system label color
+            let titleAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: NSColor.labelColor
             ]
-            button.attributedTitle = NSAttributedString(
+            attributedString.append(NSAttributedString(
                 string: title,
-                attributes: attributes
-            )
+                attributes: titleAttributes
+            ))
+            
+            button.attributedTitle = attributedString
         }
         self.frame = statusItem!.button!.frame
     }

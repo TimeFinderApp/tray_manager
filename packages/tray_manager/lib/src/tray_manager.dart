@@ -176,16 +176,19 @@ class TrayManager {
     await _channel.invokeMethod('setTitle', arguments);
   }
 
-  /// Sets the title with color for this tray icon (macOS only).
+  /// Sets the attributed title displayed in the status bar.
   /// 
-  /// The [color] parameter should be in hex format (e.g., '#FF0000' for red).
-  /// On platforms other than macOS, this falls back to setTitle without color.
-  Future<void> setTitleWithColor(String title, String color) async {
+  /// [title] - The main text to display
+  /// [prefix] - Optional prefix text (e.g., colored circle)
+  /// [prefixColor] - Hex color for the prefix (e.g., "#FF5733")
+  /// On platforms other than macOS, this falls back to setTitle.
+  Future<void> setAttributedTitle(String title, {String? prefix, String? prefixColor}) async {
     final Map<String, dynamic> arguments = {
       'title': title,
-      'color': color,
+      'prefix': prefix,
+      'prefixColor': prefixColor,
     };
-    await _channel.invokeMethod('setTitleWithColor', arguments);
+    await _channel.invokeMethod('setAttributedTitle', arguments);
   }
 
   /// Sets the context menu for this icon.
