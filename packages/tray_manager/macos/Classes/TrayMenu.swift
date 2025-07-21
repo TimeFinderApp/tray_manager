@@ -66,6 +66,25 @@ public class TrayMenu: NSMenu, NSMenuDelegate {
                     menuItem.state = checked! ? .on : .off
                 }
                 break
+            case "sectionHeader":
+                // Section headers are non-interactive and visually distinct
+                if #available(macOS 14.0, *) {
+                    // Use native section header on macOS 14+
+                    let sectionMenuItem = NSMenuItem.sectionHeader(withTitle: label)
+                    self.addItem(sectionMenuItem)
+                    continue // Skip adding the regular menuItem
+                } else {
+                    // Fallback for older macOS versions - style as disabled with different appearance
+                    menuItem.isEnabled = false
+                    menuItem.action = nil
+                    // Make text appear more like a section header
+                    let attributes: [NSAttributedString.Key: Any] = [
+                        .font: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
+                        .foregroundColor: NSColor.secondaryLabelColor
+                    ]
+                    menuItem.attributedTitle = NSAttributedString(string: label.uppercased(), attributes: attributes)
+                }
+                break
             default:
                 break
             }

@@ -56,6 +56,20 @@ public class TrayIcon: NSView {
         self.frame = statusItem!.button!.frame
     }
     
+    public func setTitleWithColor(_ title: String, _ colorHex: String) {
+        if let button = statusItem?.button {
+            let color = NSColor(hex: colorHex) ?? NSColor.labelColor
+            let attributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: color
+            ]
+            button.attributedTitle = NSAttributedString(
+                string: title,
+                attributes: attributes
+            )
+        }
+        self.frame = statusItem!.button!.frame
+    }
+    
     public func setToolTip(_ toolTip: String) {
         if let button = statusItem?.button {
             button.toolTip  = toolTip
@@ -78,5 +92,30 @@ public class TrayIcon: NSView {
     
     public override func rightMouseUp(with event: NSEvent) {
         self.onTrayIconRightMouseUp!()
+    }
+}
+
+extension NSColor {
+    convenience init?(hex: String) {
+        let r, g, b: CGFloat
+        
+        let start = hex.hasPrefix("#") ? hex.index(hex.startIndex, offsetBy: 1) : hex.startIndex
+        let hexColor = String(hex[start...])
+        
+        if hexColor.count == 6 {
+            let scanner = Scanner(string: hexColor)
+            var hexNumber: UInt64 = 0
+            
+            if scanner.scanHexInt64(&hexNumber) {
+                r = CGFloat((hexNumber & 0xff0000) >> 16) / 255
+                g = CGFloat((hexNumber & 0x00ff00) >> 8) / 255
+                b = CGFloat(hexNumber & 0x0000ff) / 255
+                
+                self.init(red: r, green: g, blue: b, alpha: 1.0)
+                return
+            }
+        }
+        
+        return nil
     }
 }

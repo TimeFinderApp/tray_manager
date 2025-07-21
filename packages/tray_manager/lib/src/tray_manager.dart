@@ -176,6 +176,18 @@ class TrayManager {
     await _channel.invokeMethod('setTitle', arguments);
   }
 
+  /// Sets the title with color for this tray icon (macOS only).
+  /// 
+  /// The [color] parameter should be in hex format (e.g., '#FF0000' for red).
+  /// On platforms other than macOS, this falls back to setTitle without color.
+  Future<void> setTitleWithColor(String title, String color) async {
+    final Map<String, dynamic> arguments = {
+      'title': title,
+      'color': color,
+    };
+    await _channel.invokeMethod('setTitleWithColor', arguments);
+  }
+
   /// Sets the context menu for this icon.
   Future<void> setContextMenu(Menu menu) async {
     _menu = menu;
