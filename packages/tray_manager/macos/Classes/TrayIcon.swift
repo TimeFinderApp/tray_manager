@@ -90,12 +90,18 @@ public class TrayIcon: NSView {
             for segment in segments {
                 let text = segment["text"] as? String ?? ""
                 let color = segment["color"] as? String
+                let useMonospacedFont = segment["useMonospacedFont"] as? Bool ?? false
                 
-                let attributes: [NSAttributedString.Key: Any]
+                var attributes: [NSAttributedString.Key: Any] = [:]
+                
                 if let color = color, let nsColor = NSColor(hex: color) {
-                    attributes = [.foregroundColor: nsColor]
+                    attributes[.foregroundColor] = nsColor
                 } else {
-                    attributes = [.foregroundColor: NSColor.labelColor]
+                    attributes[.foregroundColor] = NSColor.labelColor
+                }
+                
+                if useMonospacedFont {
+                    attributes[.font] = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
                 }
                 
                 attributedString.append(NSAttributedString(
