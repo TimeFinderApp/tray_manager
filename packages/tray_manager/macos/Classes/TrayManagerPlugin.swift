@@ -60,6 +60,9 @@ public class TrayManagerPlugin: NSObject, FlutterPlugin, NSMenuDelegate {
         case "setAttributedTitle":
             setAttributedTitle(call, result: result)
             break
+        case "setAttributedTitleWithSegments":
+            setAttributedTitleWithSegments(call, result: result)
+            break
         case "setContextMenu":
             setContextMenu(call, result: result)
             break
@@ -200,6 +203,15 @@ public class TrayManagerPlugin: NSObject, FlutterPlugin, NSMenuDelegate {
         let prefixColor: String? = args["prefixColor"] as? String;
         
         trayIcon?.setAttributedTitle(title, prefix: prefix, prefixColor: prefixColor)
+        
+        result(true)
+    }
+    
+    public func setAttributedTitleWithSegments(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let args:[String: Any] = call.arguments as! [String: Any]
+        let segments = args["segments"] as! [[String: Any?]]
+        
+        trayIcon?.setAttributedTitleWithSegments(segments)
         
         result(true)
     }

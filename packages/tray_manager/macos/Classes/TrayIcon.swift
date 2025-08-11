@@ -60,7 +60,6 @@ public class TrayIcon: NSView {
         if let button = statusItem?.button {
             let attributedString = NSMutableAttributedString()
             
-            // Add colored prefix if provided
             if let prefix = prefix, let prefixColor = prefixColor, let color = NSColor(hex: prefixColor) {
                 let prefixAttributes: [NSAttributedString.Key: Any] = [
                     .foregroundColor: color
@@ -71,7 +70,6 @@ public class TrayIcon: NSView {
                 ))
             }
             
-            // Add main title with system label color
             let titleAttributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: NSColor.labelColor
             ]
@@ -79,6 +77,32 @@ public class TrayIcon: NSView {
                 string: title,
                 attributes: titleAttributes
             ))
+            
+            button.attributedTitle = attributedString
+        }
+        self.frame = statusItem!.button!.frame
+    }
+    
+    public func setAttributedTitleWithSegments(_ segments: [[String: Any?]]) {
+        if let button = statusItem?.button {
+            let attributedString = NSMutableAttributedString()
+            
+            for segment in segments {
+                let text = segment["text"] as? String ?? ""
+                let color = segment["color"] as? String
+                
+                let attributes: [NSAttributedString.Key: Any]
+                if let color = color, let nsColor = NSColor(hex: color) {
+                    attributes = [.foregroundColor: nsColor]
+                } else {
+                    attributes = [.foregroundColor: NSColor.labelColor]
+                }
+                
+                attributedString.append(NSAttributedString(
+                    string: text,
+                    attributes: attributes
+                ))
+            }
             
             button.attributedTitle = attributedString
         }

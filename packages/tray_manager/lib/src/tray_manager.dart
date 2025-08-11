@@ -9,6 +9,7 @@ import 'package:menu_base/menu_base.dart';
 import 'package:path/path.dart' as path;
 import 'package:shortid/shortid.dart';
 import 'package:tray_manager/src/helpers/sandbox.dart';
+import 'package:tray_manager/src/text_segment.dart';
 import 'package:tray_manager/src/tray_listener.dart';
 
 const kEventOnTrayIconMouseDown = 'onTrayIconMouseDown';
@@ -185,6 +186,7 @@ class TrayManager {
   /// [prefix] - Optional prefix text (e.g., colored circle)
   /// [prefixColor] - Hex color for the prefix (e.g., "#FF5733")
   /// On platforms other than macOS, this falls back to setTitle.
+  @Deprecated('Use setAttributedTitleWithSegments instead')
   Future<void> setAttributedTitle(String title, {String? prefix, String? prefixColor}) async {
     final Map<String, dynamic> arguments = {
       'title': title,
@@ -192,6 +194,14 @@ class TrayManager {
       'prefixColor': prefixColor,
     };
     await _channel.invokeMethod('setAttributedTitle', arguments);
+  }
+
+  /// Sets the title with multiple text segments, each with optional color.
+  Future<void> setAttributedTitleWithSegments(List<TextSegment> segments) async {
+    final Map<String, dynamic> arguments = {
+      'segments': segments.map((s) => s.toJson()).toList(),
+    };
+    await _channel.invokeMethod('setAttributedTitleWithSegments', arguments);
   }
 
   /// Sets the context menu for this icon.
